@@ -7,14 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 import java.nio.file.*;
+import java.util.regex.Pattern;
 
-class ContactsBook {
-    // class variables
-    // patterns for differnt fields
+// import Checker;
+class Checker {
+
     static String firstNamePattern = "^[a-zA-Z][a-zA-Z ]*$";
     static String lastNamePattern = "^[a-zA-Z][a-zA-Z ]*$";
     static String EmailAddressPattern = "^[a-zA-Z0-9_+&*-]+(?:\\." + "[a-zA-Z0-9_+&*-]+)*@"
@@ -57,16 +56,13 @@ class ContactsBook {
         else
             return false;
     }
+}
 
-    // scanner variable is declared as static to use throughout the program
+class ContactsBook extends Checker {
+
+
     static final Scanner scan = new Scanner(System.in);
-    // contains set of contacts which are empty(contact created and no details
-    // added)
-    static HashSet<String> emptyContacts = new HashSet<>();
-    // contains set of contacts which are non empty(contact created and details
-    // added)
-    static HashSet<String> nonEmptyContacts = new HashSet<>();
-
+    
     static void InsertNewContact() throws IOException {
         int lines = 0;
 
@@ -92,7 +88,7 @@ class ContactsBook {
         System.out.print("Enter First Name: ");
         String FirstName = scan.nextLine();
 
-        while (!isValidFirstName(FirstName)) {
+        while (!Checker.isValidFirstName(FirstName)) {
             System.out.println("Enter valid First Name!!\n");
             System.out.print("Enter First Name: ");
             FirstName = scan.nextLine();
@@ -101,16 +97,47 @@ class ContactsBook {
         System.out.print("Enter Last Name: ");
         String LastName = scan.nextLine();
 
-        while (!isValidLastName(LastName)) {
+        while (!Checker.isValidLastName(LastName)) {
             System.out.println("Enter valid Last Name!!\n");
             System.out.print("Enter Last Name: ");
             LastName = scan.nextLine();
         }
 
+        FirstName = FirstName.trim();
+        LastName = LastName.trim();
+        String SearchName = FirstName + " " + LastName;
+
+        try {
+            FileReader contactFile = new FileReader(
+                    "Contact_file.txt");
+
+            BufferedReader BuffReader = new BufferedReader(contactFile);
+
+            String line;
+
+            while ((line = BuffReader.readLine()) != null) {
+                if (line.contains(SearchName)) {
+                    System.out.println("Contact with same First name and Last name already exists!!");
+                    System.out.println("Heading back to Main Menu...");
+                    BuffReader.close();
+                    return;
+
+                }
+
+            }
+            BuffReader.close();
+
+        } catch (Exception e) {
+            System.out.println("An error occurred.");
+
+        }
+
+
+
         System.out.print("Enter Contact Number: ");
         String PhoneNumber = scan.nextLine();
 
-        while (!isValidPhoneNumber(PhoneNumber)) {
+        while (!Checker.isValidPhoneNumber(PhoneNumber)) {
             System.out.println("Enter valid Contact Number!!\n");
             System.out.print("Enter Contact Number: ");
             PhoneNumber = scan.nextLine();
@@ -119,7 +146,7 @@ class ContactsBook {
         System.out.print("Enter Alternate Contact Number: ");
         String AlternatePhoneNumber = scan.nextLine();
 
-        while (!isValidPhoneNumber(AlternatePhoneNumber)) {
+        while (!Checker.isValidPhoneNumber(AlternatePhoneNumber)) {
             System.out.println("Enter valid Alternate Contact Number!!\n");
             System.out.print("Enter Alternate Contact Number: ");
             AlternatePhoneNumber = scan.nextLine();
@@ -128,7 +155,7 @@ class ContactsBook {
         System.out.print("Enter Email id: ");
         String Email = scan.nextLine();
 
-        while (!isValidEmailAddress(Email)) {
+        while (!Checker.isValidEmailAddress(Email)) {
             System.out.println("Enter valid Email id!!\n");
             System.out.print("Enter Email id: ");
             Email = scan.nextLine();
@@ -137,7 +164,7 @@ class ContactsBook {
         System.out.print("Enter Company: ");
         String company = scan.nextLine();
 
-        while (!isValidCompany(company)) {
+        while (!Checker.isValidCompany(company)) {
             System.out.println("Enter valid Company!!\n");
             System.out.print("Enter Company: ");
             company = scan.nextLine();
@@ -285,7 +312,7 @@ class ContactsBook {
                         System.out.print("Enter New First Name: ");
                         ContactSearched[1] = scan.nextLine();
 
-                        while (!isValidFirstName(ContactSearched[1])) {
+                        while (!Checker.isValidFirstName(ContactSearched[1])) {
                             System.out.println("Enter valid First Name!!\n");
                             System.out.print("Enter New First Name: ");
                             ContactSearched[1] = scan.nextLine();
@@ -299,7 +326,7 @@ class ContactsBook {
                         System.out.print("Enter New Last Name: ");
                         ContactSearched[2] = scan.nextLine();
 
-                        while (!isValidLastName(ContactSearched[2])) {
+                        while (!Checker.isValidLastName(ContactSearched[2])) {
                             System.out.println("Enter valid Last Name!!\n");
                             System.out.print("Enter New Last Name: ");
                             ContactSearched[2] = scan.nextLine();
@@ -313,7 +340,7 @@ class ContactsBook {
                         System.out.print("Enter New Phone Number: ");
                         ContactSearched[3] = scan.nextLine();
 
-                        while (!isValidPhoneNumber(ContactSearched[3])) {
+                        while (!Checker.isValidPhoneNumber(ContactSearched[3])) {
                             System.out.println("Enter valid Phone Number!!\n");
                             System.out.print("Enter New Phone Number: ");
                             ContactSearched[3] = scan.nextLine();
@@ -327,7 +354,7 @@ class ContactsBook {
                         System.out.print("Enter New Alternate Phone Number: ");
                         ContactSearched[4] = scan.nextLine();
 
-                        while (!isValidPhoneNumber(ContactSearched[4])) {
+                        while (!Checker.isValidPhoneNumber(ContactSearched[4])) {
                             System.out.println("Enter valid Alternate Phone Number!!\n");
                             System.out.print("Enter New Alternate Phone Number: ");
                             ContactSearched[4] = scan.nextLine();
@@ -341,7 +368,7 @@ class ContactsBook {
                         System.out.print("Enter New Email ID: ");
                         ContactSearched[5] = scan.nextLine();
 
-                        while (!isValidEmailAddress(ContactSearched[5])) {
+                        while (!Checker.isValidEmailAddress(ContactSearched[5])) {
                             System.out.println("Enter valid Email ID!!\n");
                             System.out.print("Enter New Email ID: ");
                             ContactSearched[5] = scan.nextLine();
@@ -355,7 +382,7 @@ class ContactsBook {
                         System.out.print("Enter New Company: ");
                         ContactSearched[6] = scan.nextLine();
 
-                        while (!isValidCompany(ContactSearched[6])) {
+                        while (!Checker.isValidCompany(ContactSearched[6])) {
                             System.out.println("Enter valid Company!!\n");
                             System.out.print("Enter New Company: ");
                             ContactSearched[6] = scan.nextLine();
@@ -370,7 +397,6 @@ class ContactsBook {
                             + ContactSearched[6] + "\n";
                     ContactsList.add(line);
 
-                    break;
 
                 } else {
 
@@ -530,7 +556,7 @@ class ContactsBook {
 
 }
 
-public class Contact_Management_System {
+public class Contact_Management_System_OOP {
     public static void main(String[] args) throws IOException {
 
         Scanner sc = new Scanner(System.in);
